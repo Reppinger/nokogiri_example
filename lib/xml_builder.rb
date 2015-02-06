@@ -1,3 +1,4 @@
+require 'nokogiri'
 puts 'Starting with examples taken from http://www.rubydoc.info/github/sparklemotion/nokogiri/Nokogiri/XML/Builder'
 
 puts '===Basic example==='
@@ -41,8 +42,9 @@ puts builder.to_xml
 
 puts '===Adding an undefined namespace to a node==='
 #This will generate an error because the namespace has not been defined
+begin
 builder = Nokogiri::XML::Builder.new do
-  root('xmlns:foo' => 'bar') {
+  root {
     products { |products|
       products['foo'].widget(category:'stuff') {
         id_ "10"
@@ -51,7 +53,9 @@ builder = Nokogiri::XML::Builder.new do
     }
   }
 end
-puts 'ArgumentError: Namespace foo has not been defined'
+rescue Exception => e
+  puts e
+end
 
 puts '===Adding a properly defined namespace to a node==='
 builder = Nokogiri::XML::Builder.new do
